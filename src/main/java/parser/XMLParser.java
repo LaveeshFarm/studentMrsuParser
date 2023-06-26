@@ -1,5 +1,7 @@
 package parser;
 
+import info.*;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -7,19 +9,16 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
+import java.util.*;
 
 public class XMLParser implements Parser {
 
     @Override
-    public void parse(File file) {
-
-    }
-
-//     todo дополнить реализацию, это чисто пример
-    private List<? extends Object> readAddress(File file) {
+    public List<? extends Object>  parse(File file) {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader parser = null;
+        List someList = null;
+        HashMap<String, String> map = new HashMap<String, String>();
 
         try {
             parser = factory.createXMLStreamReader(new FileInputStream(file));
@@ -36,11 +35,27 @@ public class XMLParser implements Parser {
                 int event = parser.next();
                 if (event == XMLStreamConstants.START_ELEMENT) {
 //                    todo: добавить реализацию
+                    map.put("localName", parser.getLocalName());
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        map.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+                    }
+
+                    String localName = map.get("localName");
+                    if(localName.equalsIgnoreCase(Address.class.getSimpleName())) {
+                        if(someList == null)
+                            someList = new ArrayList<Address>();
+                        someList.add(new Address(map));
+                    }
+                    if(localName.equalsIgnoreCase(Client.class.getSimpleName())) {
+                        if(someList == null)
+                            someList = new ArrayList<Client>();
+                        someList.add(new Client(map));
+                    }
                 }
             }
         } catch (XMLStreamException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return someList;
     }
 }
