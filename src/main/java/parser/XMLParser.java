@@ -1,5 +1,6 @@
 package parser;
 
+import exceptions.UnexpectedXMLLocalNameException;
 import info.*;
 
 import javax.xml.stream.XMLInputFactory;
@@ -41,20 +42,23 @@ public class XMLParser implements Parser {
                     }
 
                     String localName = map.get("localName");
-                    if(localName.equalsIgnoreCase(Address.class.getSimpleName())) {
-                        if(someList == null)
+                    if (localName.equalsIgnoreCase("ctRoot"))
+                        continue;
+                    if (localName.equalsIgnoreCase(Address.class.getSimpleName())) {
+                        if (someList == null)
                             someList = new ArrayList<Address>();
                         someList.add(new Address(map));
-                    }
-                    if(localName.equalsIgnoreCase(Client.class.getSimpleName())) {
-                        if(someList == null)
+                    } else if (localName.equalsIgnoreCase(Client.class.getSimpleName())) {
+                        if (someList == null)
                             someList = new ArrayList<Client>();
                         someList.add(new Client(map));
-                    }
+                    } else throw new UnexpectedXMLLocalNameException();
                 }
             }
         } catch (XMLStreamException e) {
             System.out.println(e.getMessage());
+        } catch (UnexpectedXMLLocalNameException e) {
+            throw new RuntimeException(e);
         }
         return someList;
     }
