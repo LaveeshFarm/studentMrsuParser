@@ -2,7 +2,7 @@ package info;
 
 import java.util.HashMap;
 
-public class Client extends Object {
+public class Client extends Object implements Info{
 
     private Integer id;
     private String name;
@@ -50,10 +50,7 @@ public class Client extends Object {
         this.address = address;
     }
 
-    public String toString() {
-        return "ID: " + id + " Name: " + name + " Personnel number: " + personnelNumber + " Address ID: " + addressId;
-    }
-
+    @Override
     public void setMap(HashMap<String, String> addressMap) {
         if(addressMap != null && !addressMap.isEmpty()) {
             this.id = Integer.parseInt(addressMap.get("id"));
@@ -63,4 +60,8 @@ public class Client extends Object {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ID: " + id + " Name: " + name + " Personnel number: " + personnelNumber + " Address ID: " + addressId;
+    }
 }

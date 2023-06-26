@@ -3,7 +3,7 @@ package info;
 import java.util.HashMap;
 import java.util.List;
 
-public class Address extends Object {
+public class Address extends Object implements Info {
 
     private Integer id;
     private String flatNumber;
@@ -68,10 +68,12 @@ public class Address extends Object {
         this.id = id;
     }
 
+    @Override
     public String toString() {
         return "ID: " + id + " City: " + city + " House: " + house + " Floor: " + floor + " Flat number: " + flatNumber;
     }
 
+    @Override
     public void setMap(HashMap<String, String> addressMap) {
         if(addressMap != null && !addressMap.isEmpty()) {
             this.id = Integer.parseInt(addressMap.get("id"));
